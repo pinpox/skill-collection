@@ -17,6 +17,12 @@
 runCommand "skill-${name}"
   {
     inherit src;
+    pname = name;
+
+    # Consumers resolve the skill directory from the attribute rather than by
+    # reading the store path, which would force the derivation at eval time.
+    passthru.skillName = name;
+
     meta = {
       description = "Agent skill: ${name}";
     }
