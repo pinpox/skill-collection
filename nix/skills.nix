@@ -16,5 +16,8 @@
 #   extra   – additional home-manager module to merge in (only used by the
 #             per-skill homeModules variant).
 {
+  hedgedoc = { };
   kleinanzeigen = { };
+  # Documentation only; `vja` itself comes from nixpkgs.
+  todos = { };
 }
