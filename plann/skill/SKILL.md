@@ -118,21 +118,26 @@ non-interactive agent context; they will hang.
   Sort in the shell if you use it.
 - **Empty output means zero matches**, not an error; `list` prints one blank
   line. Exit status stays 0.
-- **Rate limiting.** Some servers (notably Stalwart) throttle aggressively.
-  Symptoms are a `RateLimitError`, or bursts of queries suddenly returning
-  nothing. Batch your work into few invocations, and back off ~60 s after a
-  failure instead of retrying immediately.
-- **Time-range searches returning 0 on a non-empty calendar** is a known
-  caldav/server incompatibility (confirmed against Stalwart: the server matches
-  the range correctly over the wire, but caldav fails to parse the per-object
-  responses and drops them). Verify with `plann select --all --event list |
-wc -l`; if that returns rows while a `--start/--end` query returns nothing,
-  fall back to `--all` plus client-side filtering:
+- **Rate limiting.** caldav raises `RateLimitError` on HTTP 429/503 and does
+  **not** retry by default. One invocation costs roughly 4-7 requests, the
+  first of which is unauthenticated (caldav probes for the auth scheme), so
+  the anonymous per-IP budget matters as much as the authenticated one. For
+  reference, Stalwart's defaults are 1000 authenticated requests/min per
+  account and 100 anonymous/min per IP — far above CLI use, but worth knowing
+  before scripting a loop. Back off ~60 s after a failure instead of retrying
+  immediately.
+- **A time-range search returning 0 on a non-empty calendar** means the
+  server/caldav pair mishandled the range query — the server matches over the
+  wire but caldav can drop the per-object responses. This is not the norm
+  (caldav 3.2.1 against Stalwart 0.16.13 returns plain, all-day and recurring
+  events correctly, including recurrence expansion), so treat it as a
+  diagnostic: check with `plann select --all --event list | wc -l`, and only
+  if that returns rows while `--start/--end` returns nothing, fall back to
+  `--all` plus client-side filtering:
 
   ```bash
   plann select --all --event list 2>/dev/null \
     | sort | awk -v now="$(date '+%F %T')" '$0 > now' | head -1
   ```
 
-  This fetches every object, so it is slow — prefer a time-range query whenever
-  it actually returns results.
+  This fetches every object, so it is slow — prefer a time-range query.
