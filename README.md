@@ -8,6 +8,7 @@ CLI tools and the agent skills that document them.
 | ------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------- |
 | [hedgedoc](hedgedoc/)           | Read and edit HedgeDoc/CodiMD notes from a note URL                          | [SKILL.md](hedgedoc/skill/SKILL.md)      |
 | [kleinanzeigen](kleinanzeigen/) | Search kleinanzeigen.de, read notifications, read and write account messages | [SKILL.md](kleinanzeigen/skill/SKILL.md) |
+| [plann](plann/)                 | CalDAV calendar and task management via `plann`                              | [SKILL.md](plann/skill/SKILL.md)         |
 | [todos](todos/)                 | Manage Vikunja todos via `vja` (skill only, no code)                         | [SKILL.md](todos/skill/SKILL.md)         |
 
 Each tool ships its skill definition under `<tool>/skill/` (installed to

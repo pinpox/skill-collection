@@ -7,5 +7,6 @@ in
 {
   hedgedoc = callPackage ../hedgedoc { };
   kleinanzeigen = callPackage ../kleinanzeigen { };
+  plann = callPackage ../plann { };
   todos = callPackage ../todos { inherit mkSkill; };
 }
