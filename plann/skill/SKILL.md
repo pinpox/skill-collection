@@ -125,23 +125,25 @@ non-interactive agent context; they will hang.
   98-object calendar lists fine, a 1664-object one dies mid-run with
   `Retry-After: 42`. Never run `--all` against a large calendar; bound the
   selection first, and back off ~60 s after a failure instead of retrying.
-- **Time-range searches return 0 on a non-empty calendar.** Confirmed with
-  caldav 3.2.1 against Stalwart 0.16.13, on two calendars of 1664 and 98
-  objects: `--start/--end` yields nothing while `--all` returns every event.
-  The server is not at fault — a raw `calendar-query` REPORT for the same
-  range returns the objects over the wire, and each GETs as valid iCalendar.
-  caldav logs `Ical data was modified to avoid compatibility issues` and then
-  drops them. Objects that plann itself created are unaffected, so a
-  self-authored test event will not reproduce this.
+- **Time-range searches return 0 on a non-empty calendar (Stalwart).** The
+  cause is server-side and now pinned down: Stalwart 0.16.13 does not
+  serialise `<C:calendar-data/>` inside a `calendar-query` REPORT, so caldav
+  receives matches with no payload and yields nothing. Isolated against a
+  1664-object calendar:
 
-  Until it is fixed upstream, treat `--start/--end` as unreliable for reading
-  and use `--all` plus client-side filtering on calendars small enough to
-  survive the per-object GETs:
+  | request | result |
+  |---|---|
+  | `calendar-query` + time-range, `getetag` only | 8 hrefs for the month, correct |
+  | `calendar-query` + time-range, with `calendar-data` | 1 |
+  | `calendar-query` no filter, with `calendar-data` | 1 |
+  | `calendar-multiget` with explicit hrefs | every object, correct |
 
-  ```bash
-  plann select --all --event list 2>/dev/null \
-    | sort | awk -v now="$(date '+%F %T')" '$0 > now' | head -1
-  ```
+  So both the time-range filter and object serialisation work — only their
+  combination in `calendar-query` is broken. Objects that plann created itself
+  are returned, which is why a self-authored test event never reproduces it.
 
-  For a large calendar, neither path works: prefer a direct `REPORT` with
-  curl, which filters server-side in a single request.
+  Until it is fixed, don't read Stalwart calendars through plann. Query for
+  hrefs and then fetch them with `calendar-multiget` (two curl requests, still
+  server-side filtered), or accept `--all` on calendars small enough to
+  survive one GET per object. Nextcloud serialises `calendar-data` correctly,
+  so ordinary plann reads work there.
