@@ -131,12 +131,12 @@ non-interactive agent context; they will hang.
   receives matches with no payload and yields nothing. Isolated against a
   1664-object calendar:
 
-  | request | result |
-  |---|---|
-  | `calendar-query` + time-range, `getetag` only | 8 hrefs for the month, correct |
-  | `calendar-query` + time-range, with `calendar-data` | 1 |
-  | `calendar-query` no filter, with `calendar-data` | 1 |
-  | `calendar-multiget` with explicit hrefs | every object, correct |
+  | request                                             | result                         |
+  | --------------------------------------------------- | ------------------------------ |
+  | `calendar-query` + time-range, `getetag` only       | 8 hrefs for the month, correct |
+  | `calendar-query` + time-range, with `calendar-data` | 1                              |
+  | `calendar-query` no filter, with `calendar-data`    | 1                              |
+  | `calendar-multiget` with explicit hrefs             | every object, correct          |
 
   So both the time-range filter and object serialisation work — only their
   combination in `calendar-query` is broken. Objects that plann created itself
