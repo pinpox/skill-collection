@@ -9,4 +9,5 @@ in
   kleinanzeigen = callPackage ../kleinanzeigen { };
   plann = callPackage ../plann { };
   todos = callPackage ../todos { inherit mkSkill; };
+  zulip = callPackage ../zulip { };
 }

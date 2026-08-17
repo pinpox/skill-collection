@@ -21,4 +21,5 @@
   plann = { };
   # Documentation only; `vja` itself comes from nixpkgs.
   todos = { };
+  zulip = { };
 }
