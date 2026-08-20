@@ -16,6 +16,8 @@
 #   extra   – additional home-manager module to merge in (only used by the
 #             per-skill homeModules variant).
 {
+  # Documentation only; `tea` itself comes from nixpkgs.
+  gitea = { };
   hedgedoc = { };
   kleinanzeigen = { };
   plann = { };

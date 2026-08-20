@@ -6,6 +6,7 @@ CLI tools and the agent skills that document them.
 
 | Tool                            | Description                                                                  | Skill                                    |
 | ------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------- |
+| [gitea](gitea/)                 | Read and write Gitea/Forgejo issues via `tea` (skill only, no code)          | [SKILL.md](gitea/skill/SKILL.md)         |
 | [hedgedoc](hedgedoc/)           | Read and edit HedgeDoc/CodiMD notes from a note URL                          | [SKILL.md](hedgedoc/skill/SKILL.md)      |
 | [kleinanzeigen](kleinanzeigen/) | Search kleinanzeigen.de, read notifications, read and write account messages | [SKILL.md](kleinanzeigen/skill/SKILL.md) |
 | [plann](plann/)                 | CalDAV calendar and task management via `plann`                              | [SKILL.md](plann/skill/SKILL.md)         |
